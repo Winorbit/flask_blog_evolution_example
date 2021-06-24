@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+Последние посты
+
+{% for post in posts %}
+{{post}}
+	
+<ul>
+	<li><h2>{{post[0]}}</h2><b>{{post[1]}}</b></li>
+</ul>
+{{post[0]}}
+{% endfor %}
+
+
+
+    
+</body>
+</html>
