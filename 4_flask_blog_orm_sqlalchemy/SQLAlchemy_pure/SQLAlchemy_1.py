@@ -25,14 +25,14 @@ DeclarativeBase.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-"""
-new_user = User(name='New', email="testmail@test.ru")
-session.add(new_user)
-session.commit()
-"""
+
+#new_user = User(name='New', email="testmail@test.ru")
+#session.add(new_user)
+#session.commit()
+
 
 for user in session.query(User):
-    print(user)
+    print(user.name)
 
 
 

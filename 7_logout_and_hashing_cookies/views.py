@@ -1,8 +1,4 @@
-"""
-https://gadjimuradov.ru/post/sqlalchemy-dlya-novichkov/
-https://habr.com/ru/post/470285/
-"""
-from flask import Flask, request, make_response, render_template, redirect
+from flask import Flask, request, render_template, redirect, session, url_for
 from models import engine, Post, User, DeclarativeBase
 from sqlalchemy.orm import sessionmaker
 
@@ -11,9 +7,9 @@ Session = sessionmaker(bind=engine)
 app = Flask(__name__, template_folder='templates')
 
 @app.route("/")
-def hello_world():
-    session = Session()
-    posts_query = session.query(Post).all()
+def index():
+    db_session = Session()
+    posts_query = db_session.query(Post).all()
     posts = [post for post in posts_query]
     return render_template('main.html', posts=posts)
     pass
@@ -26,33 +22,38 @@ def signup():
         password = request.form.get('password')
 
         new_user = User(name=username, email=email, password=password)
-        session = Session()
-        session.add(new_user)
-        session.commit()
+        db_session = Session()
+        db_session.add(new_user)
+        db_session.commit()
 
-        res = make_response(redirect("/login"))
-        return res
+        return redirect(url_for("login"))
     else:
-        return render_template('signup.html')
+        return render_template('user/signup.html')
 
 @app.route("/login", methods = ["get", "post"])
 def login():
     if request.method == 'POST':
         username = request.form.get('username') 
         password = request.form.get('password')
-        session = Session()
-        user = session.query(User).filter(User.password == password, 
+        db_session = Session()
+        user = db_session.query(User).filter(User.password == password, 
                                           User.name == username).one()
         if not user:
             message = "Проверьте правильность введенных данных."
-            return render_template('login.html', message=message)
+            return render_template('user/login.html', message=message)
         else:
-            res = make_response(redirect("/cabinet", code=302))
-            res.set_cookie('username', username)
-            return res
+            session['username'] = username
+            return redirect(url_for('my_cabinet'))
     else:
         message = "Введите данные для того, чтобы войти в личный кабинет."
-        return render_template('login.html', message=message)
+        return render_template('user/login.html', message=message)
+
+
+@app.route("/logout", methods = ["post"])
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 @app.route("/cabinet", methods = ["get", "post"])
 def my_cabinet():
@@ -60,29 +61,37 @@ def my_cabinet():
         title = request.form.get('title') 
         text = request.form.get('post_text')
 
-        username = request.cookies.get("username")
+        username = session.get("username")
 
-        session = Session()
-        user = session.query(User).filter(User.name == username).one()
+        db_session = Session()
+        user = db_session.query(User).filter(User.name == username).one()
 
         if user:
             new_post = Post(title=title, text=text, author=user.id)
-            session.add(new_post)
-            session.commit()
-            res = make_response(redirect("/cabinet"))
-            return res
+            db_session.add(new_post)
+            db_session.commit()
+            return redirect(url_for("my_cabinet"))
         else:
             error_message = "Ваши данные некорректны, для решния проблемы попробуйте авторизоваться заново."
             return render_template('error_page.html',error_message=error_message)
 
     else:
-        if request.cookies.get("username"):
-            return render_template('cabinet.html')
+        if session.get("username"):
+            return render_template('user/cabinet.html')
         else:
-            error_message = "В ваших cookie-файлах не найдено данных о пользователе, пожалуйста, залогиньтесь еще раз."
-            return render_template('error_page.html',error_message=error_message)
-            pass
-            
-    
+            return redirect(url_for("login"))
 
+@app.route("/posts")
+def posts():
+    db_session = Session()
+    posts_query = db_session.query(Post).all()
+    posts = [post for post in posts_query]
+    return render_template('posts/posts.html', posts=posts)
+    pass
 
+@app.route("/posts/<post_id>")
+def post(post_id):
+    db_session = Session()
+    post = db_session.query(Post).filter(Post.id == post_id).one()
+    return render_template('posts/post.html', post=post)
+    pass

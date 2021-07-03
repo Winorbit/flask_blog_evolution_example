@@ -2,17 +2,10 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
+from settings import dev_db_settings as db_settings
 
 
-dev_db_settings = {"drivername": 'postgresql+psycopg2',
-                   "database":'testdatabase', 
-                   "username":'dev_user', 
-                   "password":'qwerty', 
-                   "host":'31.131.28.206'}
-
-engine  = create_engine(URL(**dev_db_settings))
-#engine  = create_engine(URL.create(**dev_db_settings))
-
+engine  = create_engine(URL.create(**db_settings))
 DeclarativeBase = declarative_base()
 
 
@@ -25,7 +18,7 @@ class User(DeclarativeBase):
     password = Column('password', String)
 
     def __repr__(self):
-        return f"{name}"
+        return "".format(self.email)
 
 class Post(DeclarativeBase):
     __tablename__ = 'posts'
@@ -33,6 +26,7 @@ class Post(DeclarativeBase):
     id = Column(Integer, primary_key=True)
     title = Column('name', String)
     text = Column('email', String)
+    author = Column(Integer, ForeignKey('users_2.id'))
 
     def __repr__(self):
         return title
@@ -42,8 +36,11 @@ DeclarativeBase.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-new_user = User(name='NewAuthor', email="author@test.ru", password="mysecret")
-new_post = Post(title='Some post title', text="Just some text")
+#new_user = User(name='NewAuthor', email="author@test.ru", password="mysecret")
+#new_post = Post(title='Some post title', text="Just some text")
+
+#print(new_user.id)
+#new_post = Post(title='Some post title', text="Just some text", author=1)
 
 #session.add(new_user)
 #session.add(new_post)
