@@ -94,7 +94,6 @@ def hello_world():
     simple_string = "Hello!"
     simple_dict = {"title": "I am title!"}
     posts = get_all_posts()
-    #return render_template('main.html', value_one=simple_string, value_two=simple_dict)
     return render_template('main.html', posts=posts)
 
 

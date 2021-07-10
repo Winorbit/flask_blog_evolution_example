@@ -131,7 +131,6 @@ def posts():
         logger.error(log_message)
         return render_template('error_page.html',error_message=error_message)
 
-
 @app.route("/posts/<post_id>")
 def post(post_id): 
     try:

@@ -1,8 +1,8 @@
 import psycopg2
-dev_db_settings = {"dbname":'testdatabase', 
-               "user":'dev_user', 
-               "password":'qwerty', 
-               "host":'31.131.28.206'}
+dev_db_settings = {"dbname":'database_name', 
+                   "user":'database_user', 
+                   "password":'database_password', 
+                   "host":'database_host'}
 
 def connect_to_db(db_settings):
     conn = psycopg2.connect(**db_settings)
