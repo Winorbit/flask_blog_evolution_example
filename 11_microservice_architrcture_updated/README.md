@@ -6,7 +6,8 @@
 ### Требования
 Docker
 Docker-compose
-Данные для подключения к Postgres в [файле]()
+Данные для подключения к Postgres в файле api/.env
+Данные для подключения к Postgres в файле web_ui/.env
 
 ### Запуск
 Перенос списка зависимостей из Pipenv в requirements.txt :

@@ -4,10 +4,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 
 dev_db_settings = {"drivername": 'postgresql+psycopg2',
-                   "database":'testdatabase', 
-                   "username":'dev_user', 
-                   "password":'qwerty', 
-                   "host":'31.131.28.206'}
+                   "database":'database_name', 
+                   "username":'database_user', 
+                   "password":'database_password', 
+                   "host":'database_host'}
 
 engine  = create_engine(URL(**dev_db_settings))
 #engine = create_engine(f'postgresql+psycopg2://{dev_db_settings["user"]}:{dev_db_settings["password"]}@{dev_db_settings["host"]}/{dev_db_settings["dbname"]}')

@@ -6,7 +6,8 @@
 
 ### Требования
 Python 3.5+
-Данные для подключения к Postgres в [файле]()
+Данные для подключения к Postgres в файле SQLAlchemy/setting.py
+Данные для подключения к Postgres в файле blog_with_orm/.env.py
 
 ### Запуск
 

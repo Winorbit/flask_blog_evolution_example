@@ -1,5 +1,5 @@
 dev_db_settings = {"drivername": 'postgresql+psycopg2',
-                   "database":'testdatabase', 
-                   "username":'dev_user', 
-                   "password":'qwerty', 
-                   "host":'31.131.28.206'}
+                   "database":'database_name', 
+                   "username":'database_user', 
+                   "password":'database_password', 
+                   "host":'database_host'}
